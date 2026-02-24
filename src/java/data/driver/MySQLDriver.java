@@ -1,0 +1,27 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package data.driver;
+import data.utils.Constants;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+/**
+ *
+ * @author HIEU PC
+ */
+public class MySQLDriver {
+    public static Connection getConnection(){
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
+    } catch (ClassNotFoundException | SQLException ex) {
+        // In lỗi chi tiết ra màn hình Output của NetBeans/Eclipse
+        ex.printStackTrace(); 
+        return null;
+    }
+}
+}
