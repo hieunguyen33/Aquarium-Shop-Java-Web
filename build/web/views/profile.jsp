@@ -43,6 +43,9 @@
                         <button class="nav-link mb-2 py-2" data-bs-toggle="pill" data-bs-target="#tab-orders" type="button">
                             <i class="bi bi-bag-check-fill me-2"></i> Lịch sử đơn hàng
                         </button>
+                        <button class="nav-link mb-2 py-2 text-warning" data-bs-toggle="pill" data-bs-target="#tab-password" type="button">
+                            <i class="bi bi-key-fill me-2"></i> Đổi mật khẩu
+                        </button>
                         
                     </div>
                 </div>
@@ -196,4 +199,5 @@
         }
     });
 </script>
+
 <c:import url="/inc/footer.jsp" />

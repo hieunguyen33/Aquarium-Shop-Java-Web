@@ -1,6 +1,7 @@
 package controller;
 
 import data.dao.Database;
+import data.utils.API; // Đảm bảo đã import API để dùng MD5
 import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,22 +18,24 @@ public class ChangePasswordServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
-        // 1. Kiểm tra đăng nhập
         if (user == null) {
             response.sendRedirect("login");
             return;
         }
 
-        // 2. Lấy dữ liệu từ form
+        // 1. Lấy dữ liệu từ form (mật khẩu thuần người dùng nhập)
         String oldPass = request.getParameter("oldPass");
         String newPass = request.getParameter("newPass");
         String confirmPass = request.getParameter("confirmPass");
 
-        // 3. Kiểm tra mật khẩu cũ
-        // Lưu ý: user.getPassword() phải trả về đúng mật khẩu đang lưu trong DB
-        if (user.getPassword() == null || !user.getPassword().equals(oldPass)) {
+        // 2. MÃ HÓA mật khẩu cũ người dùng vừa nhập để đi so sánh
+        // Vì trong database/session của bạn đang lưu chuỗi MD5 (202cb962...)
+        String oldPassMd5 = API.getMd5(oldPass); 
+
+        // 3. KIỂM TRA: So sánh 2 chuỗi MD5 với nhau
+        if (user.getPassword() == null || !user.getPassword().equals(oldPassMd5)) {
             session.setAttribute("error", "Mật khẩu cũ không chính xác!");
-            response.sendRedirect("profile#tab-password"); // Giữ người dùng ở tab mật khẩu
+            response.sendRedirect("profile#tab-password");
             return;
         }
 
@@ -43,27 +46,25 @@ public class ChangePasswordServlet extends HttpServlet {
             return;
         }
         
-        // 5. Kiểm tra độ dài mật khẩu (Tuỳ chọn)
-        if (newPass.length() < 6) {
-            session.setAttribute("error", "Mật khẩu mới phải có ít nhất 6 ký tự!");
+        if (newPass.length() < 3) { // Bạn đang dùng mk '123' nên tôi để độ dài tối thiểu là 3
+            session.setAttribute("error", "Mật khẩu mới quá ngắn!");
             response.sendRedirect("profile#tab-password");
             return;
         }
 
-        // 6. Thực hiện đổi mật khẩu trong Database
+        // 5. Cập nhật vào Database (Hàm này trong UserImpl cũng phải có API.getMd5)
         boolean isUpdated = Database.getUserDao().changePassword(user.getId(), newPass);
 
         if (isUpdated) {
-            // Cập nhật lại mật khẩu mới vào session để không bị lỗi ở lần đổi tiếp theo
-            user.setPassword(newPass);
+            // ✅ CẬP NHẬT SESSION: Lưu lại mã MD5 của mật khẩu mới
+            user.setPassword(API.getMd5(newPass)); 
             session.setAttribute("user", user);
             
             session.setAttribute("message", "Đổi mật khẩu thành công!");
         } else {
-            session.setAttribute("error", "Lỗi hệ thống, vui lòng thử lại sau!");
+            session.setAttribute("error", "Lỗi hệ thống!");
         }
 
-        // Quay lại tab password
         response.sendRedirect("profile#tab-password");
     }
 }
