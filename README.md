@@ -82,10 +82,15 @@ Dự án này là một website thương mại điện tử hoàn chỉnh với 
 ### 2. Giỏ hàng & Quản lý số lượng
 <img width="1838" alt="image" src="https://github.com/user-attachments/assets/290aad27-e09f-40e4-8c69-3deca930d418" />
 
-### 3. Giao diện Admin - Quản lý chi tiết đơn hàng
+### 3. Nhập kho & Quản lý lịch sử nhập kho
+<img width="1843" height="914" alt="image" src="https://github.com/user-attachments/assets/0d51db08-01b2-49e6-b726-90f937bf40ce" />
+<img width="1856" height="883" alt="image" src="https://github.com/user-attachments/assets/b608f9f6-4e3c-4b70-b5f3-c5939eaf8680" />
+
+
+### 4. Giao diện Admin - Quản lý chi tiết đơn hàng
 <img width="1859" alt="image" src="https://github.com/user-attachments/assets/cf7549a4-4e80-4152-8075-6bce7a69bf7a" />
 
-### 4. Hồ sơ cá nhân & Bảo mật tài khoản
+### 5. Hồ sơ cá nhân & Bảo mật tài khoản
 <img width="1860" alt="image" src="https://github.com/user-attachments/assets/4c36b320-01ab-47f4-a919-9df3862c8d77" />
 
 ---
