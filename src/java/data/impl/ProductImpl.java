@@ -50,13 +50,36 @@ public class ProductImpl implements ProductDao {
         } catch (SQLException ex) { ex.printStackTrace(); }
     }
 
-    @Override public boolean insert(Product p) { 
+    @Override 
+    public boolean insert(Product p) { 
         String sql = "INSERT INTO products(name, image, price, quantity, status, id_category) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection con = MySQLDriver.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, p.getName()); ps.setString(2, p.getImage()); ps.setDouble(3, p.getPrice());
-            ps.setInt(4, p.getQuantity()); ps.setBoolean(5, p.isStatus()); ps.setInt(6, p.getId_category());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) { return false; }
+        // Thêm Statement.RETURN_GENERATED_KEYS để lấy ID vừa tạo
+        try (Connection con = MySQLDriver.getConnection(); 
+             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            
+            ps.setString(1, p.getName()); 
+            ps.setString(2, p.getImage()); 
+            ps.setDouble(3, p.getPrice());
+            ps.setInt(4, p.getQuantity()); 
+            ps.setBoolean(5, p.isStatus()); 
+            ps.setInt(6, p.getId_category());
+            
+            int affectedRows = ps.executeUpdate();
+            
+            if (affectedRows > 0) {
+                // Lấy ID tự động sinh ra từ database
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        p.setId(rs.getInt(1)); // Gán ngược ID vào đối tượng p
+                    }
+                }
+                return true;
+            }
+        } catch (SQLException e) { 
+            e.printStackTrace(); 
+            return false; 
+        }
+        return false;
     }
     
     @Override public boolean update(Product p) { 

@@ -5,6 +5,7 @@ import data.impl.OrderImpl;
 import data.impl.ProductImpl;
 import data.impl.UserImpl;
 import data.driver.MySQLDriver;
+import data.impl.ImportImpl;
 import java.sql.Connection;
 
 public class Database {
@@ -20,8 +21,10 @@ public class Database {
     public static OrderDao getOrderDao() {
         return new OrderImpl();
     }
+    public static ImportDao getImportDao() {
+        return new ImportImpl();
+    }
 
-    // Trả về kết nối thực tế từ Driver của bạn
     public static Connection getConnection() {
         return MySQLDriver.getConnection();
     }

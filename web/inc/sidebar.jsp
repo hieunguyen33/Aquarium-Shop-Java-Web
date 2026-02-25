@@ -33,6 +33,7 @@
             <li class="nav-item"><a class="nav-link" href="listProduct">Sản phẩm</a></li>
             <li class="nav-item"><a class="nav-link" href="donhang">Đơn hàng</a></li>
             <li class="nav-item"><a class="nav-link" href="addProduct">Thêm sản phẩm</a></li>
+            <li class="nav-item"><a class="nav-link" href="import-history">Lịch sử nhập hàng</a></li>
             <li class="nav-item"><a class="nav-link" href="logout">Đăng xuất</a></li>
         </ul>
     </div>

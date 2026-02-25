@@ -2,9 +2,12 @@ package controller;
 
 import data.dao.Database;
 import data.dao.ProductDao;
+import data.dao.ImportDao;
 import data.impl.ProductImpl;
+import data.impl.ImportImpl;
 import model.Category;
 import model.Product;
+import model.User; // Giả sử bạn có model User
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.ServletException;
@@ -12,49 +15,53 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "AddProductServlet", urlPatterns = {"/addProduct"})
 public class AddProductServlet extends HttpServlet {
 
-    // Phương thức hiển thị Form thêm sản phẩm
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        // Lấy danh sách danh mục (Betta, Guppy...) từ Database để hiển thị trong select
         List<Category> listCategory = Database.getCategoryDao().findAll();
         request.setAttribute("listCategory", listCategory);
-        
-        // Chuyển hướng đến trang addProduct.jsp
         request.getRequestDispatcher("./inc/addProduct.jsp").forward(request, response);
     }
 
-    // Phương thức xử lý khi nhấn nút "Xác nhận thêm"
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Lấy dữ liệu từ Form gửi lên
             String name = request.getParameter("name");
             String image = request.getParameter("image");
             double price = Double.parseDouble(request.getParameter("price"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
-            boolean status = request.getParameter("status") != null; // Kiểm tra checkbox
+            boolean status = request.getParameter("status") != null;
             int categoryId = Integer.parseInt(request.getParameter("categoryId"));
 
-            // Tạo đối tượng Product và thực hiện chèn vào CSDL
+            // 1. Tạo đối tượng và insert sản phẩm
             Product p = new Product(0, name, image, price, quantity, status, categoryId);
-            ProductDao dao = new ProductImpl();
-            boolean result = dao.insert(p);
+            ProductDao productDao = new ProductImpl();
+            boolean isInserted = productDao.insert(p);
 
-            if (result) {
-                // Nếu thành công, gửi thông báo "Đã thêm thành công" sang JSP
-                request.setAttribute("message", "Đã thêm sản phẩm thành công!");
+            if (isInserted) {
+                // 2. GHI LỊCH SỬ NHẬP HÀNG (Phần Hiệu đang thiếu)
+                // Lấy adminId từ session (người đang đăng nhập)
+                HttpSession session = request.getSession();
+                User admin = (User) session.getAttribute("user"); // Tên attribute tùy bạn đặt lúc login
+                
+                int adminId = (admin != null) ? admin.getId() : 1; // Mặc định là 1 nếu chưa login (để test)
+                String note = "Nhập hàng tự động khi thêm sản phẩm mới";
+
+                // Gọi ImportDao để lưu vết
+                ImportDao importDao = new ImportImpl();
+                importDao.importProduct(p.getId(), adminId, quantity, note); 
+
+                request.setAttribute("message", "Đã thêm sản phẩm và ghi nhận lịch sử nhập kho!");
             } else {
                 request.setAttribute("error", "Lỗi: Không thể thêm sản phẩm!");
             }
             
-            // Sau khi xử lý xong, gọi lại doGet để nạp lại danh mục và hiển thị lại trang
             doGet(request, response);
 
         } catch (Exception e) {
