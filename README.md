@@ -47,11 +47,13 @@ Dự án này là một website thương mại điện tử hoàn chỉnh với 
 
 ## 🗄️ Cấu trúc Database (MySQL)
 
-1. **users**: Thông tin khách hàng và phân quyền (Admin/User).
-2. **products**: Thông tin sản phẩm, giá và số lượng kho.
-3. **orders**: Thông tin tổng quan về đơn hàng và trạng thái.
-4. **order_details**: Chi tiết các sản phẩm trong mỗi hóa đơn.
-5. **cart_items**: Lưu trữ giỏ hàng tạm thời để đồng bộ thiết bị.
+1.categories: Quản lý các danh mục sản phẩm (ví dụ: Cá cảnh, Thủy sinh, Phụ kiện).
+2.products: Lưu trữ thông tin chi tiết sản phẩm, giá bán và số lượng tồn kho thực tế.
+3.users: Quản lý thông tin tài khoản khách hàng và phân quyền (Admin/User).
+4.orders: Lưu trữ thông tin tổng quan về các đơn hàng (ngày đặt, tổng tiền, trạng thái).
+5.order_details: Chi tiết từng mặt hàng trong đơn hàng (liên kết giữa bảng orders và products).
+6.cart_items: Lưu trữ giỏ hàng tạm thời, giúp đồng bộ hóa dữ liệu mua sắm cho khách hàng.
+7.import_history: Nhật ký chi tiết lịch sử nhập kho, theo dõi biến động số lượng hàng hóa bởi Admin.
 
 ## ⚙️ Hướng dẫn cài đặt (Installation)
 
@@ -92,6 +94,8 @@ Dự án này là một website thương mại điện tử hoàn chỉnh với 
 
 ### 5. Hồ sơ cá nhân & Bảo mật tài khoản
 <img width="1860" alt="image" src="https://github.com/user-attachments/assets/4c36b320-01ab-47f4-a919-9df3862c8d77" />
+<img width="1858" height="892" alt="image" src="https://github.com/user-attachments/assets/27b2b4fd-0e8e-4a16-87c5-2f68eb9f8583" />
+
 
 ---
 *Created by Hiệu.*
